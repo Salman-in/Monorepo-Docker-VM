@@ -2,13 +2,17 @@ FROM oven/bun:1
 
 WORKDIR /usr/src/app
 
-## Can you optimise this?
-COPY . .
+COPY ./packages ./packages
+COPY ./bun.lock ./bun.lock
+
+COPY ./package.json ./package.json
+COPY ./turbo.json ./turbo.json
+
+COPY ./apps/websocket ./apps/websocket
 
 RUN bun install
+RUN bun db:generate
 
-RUN bun run generate:db
+EXPOSE 8080
 
-EXPOSE 8081
-
-CMD ["bun", "start:ws"]
+CMD ["bun", "start:websocket"]
